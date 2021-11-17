@@ -66,7 +66,7 @@ class KCO_Admin_Notices {
 			add_action( 'woocommerce_settings_saved', array( $this, 'check_terms' ) );
 			add_action( 'admin_notices', array( $this, 'check_autoptimize' ) );
 		} else {
-			add_action( 'admin_notices', array( $this, 'check_https' ) );
+//			add_action( 'admin_notices', array( $this, 'check_https' ) );
 			add_action( 'admin_notices', array( $this, 'check_terms' ) );
 			add_action( 'admin_notices', array( $this, 'check_autoptimize' ) );
 			add_action( 'admin_notices', array( $this, 'check_optimize' ) );

@@ -64,9 +64,9 @@ class KCO_Checkout {
 	 * @return void
 	 */
 	public function update_klarna_order() {
-		if ( ! is_checkout() ) {
-			return;
-		}
+//		if ( ! is_checkout() ) {
+//			return;
+//		}
 
 		if ( 'kco' !== WC()->session->get( 'chosen_payment_method' ) ) {
 			return;
@@ -80,6 +80,7 @@ class KCO_Checkout {
 		$klarna_order = KCO_WC()->api->get_klarna_order( $klarna_order_id );
 
 		if ( $klarna_order && 'checkout_incomplete' === $klarna_order['status'] ) {
+			// todo
 			// If it is, update order.
 			$klarna_order = KCO_WC()->api->update_klarna_order( $klarna_order_id );
 		}

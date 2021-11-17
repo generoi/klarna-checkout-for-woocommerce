@@ -1,0 +1,16 @@
+#contact-fields {
+	display: none;
+}
+#shipping-fields {
+	display: none;
+}
+
+#shipping-option {
+	display: none;
+}
+#payment-method > div.wc-block-components-checkout-step__heading > h2 {
+	display: none;
+}
+.components-button.wc-block-components-button.wc-block-components-checkout-place-order-button {
+	display: none;
+}

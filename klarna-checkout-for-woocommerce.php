@@ -148,6 +148,7 @@ if ( ! class_exists( 'KCO' ) ) {
 		public function init() {
 			// Init the gateway itself.
 			$this->init_gateways();
+			include_once KCO_WC_PLUGIN_PATH . '/includes/kco-blocks-support.php';
 		}
 
 		/**

@@ -82,6 +82,7 @@ if ( class_exists( 'WC_Payment_Gateway' ) ) {
 			add_action( 'woocommerce_receipt_kco', array( $this, 'receipt_page' ) );
 
 			add_filter( 'woocommerce_order_needs_payment', array( $this, 'maybe_change_needs_payment' ), 999, 3 );
+			add_action( 'init', array( $this, 'load_style' ) );
 		}
 
 
@@ -210,6 +211,16 @@ if ( class_exists( 'WC_Payment_Gateway' ) ) {
 			WC_Klarna_Banners::settings_sidebar( $parent_options );
 		}
 
+		public function load_style() {
+			wp_register_style(
+				'kco-block-style',
+				plugins_url( 'assets/css/kco-block.css', KCO_WC_MAIN_FILE ),
+				array(),
+				KCO_WC_VERSION
+			);
+			wp_enqueue_style( 'kco-block-style' );
+		}
+
 		/**
 		 * Enqueue payment scripts.
 		 *
@@ -219,10 +230,20 @@ if ( class_exists( 'WC_Payment_Gateway' ) ) {
 			if ( 'yes' !== $this->enabled ) {
 				return;
 			}
-
-			if ( ! is_checkout() ) {
+			global $post;
+			if ( has_blocks( $post->post_content ) ) {
+				$blocks = parse_blocks( $post->post_content );
+				if ( 'woocommerce/checkout' === $blocks[0]['blockName'] ) {
+					// page contains wc checkout block.
+					return;
+				}
+			} else {
 				return;
 			}
+
+			// if ( ! is_checkout() ) {
+			// return;
+			// }
 
 			if ( is_order_received_page() ) {
 				return;

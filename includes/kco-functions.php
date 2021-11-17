@@ -16,6 +16,10 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function kco_create_or_update_order() {
 	// Need to calculate these here, because WooCommerce hasn't done it yet.
+
+	if ( is_admin() ) {
+		return;
+	}
 	WC()->cart->calculate_fees();
 	WC()->cart->calculate_shipping();
 	WC()->cart->calculate_totals();
@@ -83,16 +87,21 @@ function kco_create_or_update_order_pay_for_order() {
  * Echoes Klarna Checkout iframe snippet.
  *
  * @param bool $pay_for_order If this is for a pay for order page or not.
- * @return void
+ * @return void|string
  */
-function kco_wc_show_snippet( $pay_for_order = false ) {
+function kco_wc_show_snippet( $pay_for_order = false, $checkout_block = false ) {
 	if ( $pay_for_order ) {
 		$klarna_order = kco_create_or_update_order_pay_for_order();
 	} else {
 		$klarna_order = kco_create_or_update_order();
 	}
 	do_action( 'kco_wc_show_snippet', $klarna_order );
+	if ( true === $checkout_block ) {
+		return $klarna_order['html_snippet'];
+	}
+
 	echo $klarna_order['html_snippet']; // phpcs:ignore WordPress -- Can not escape this, since its the iframe snippet.
+
 }
 
 /**
@@ -194,7 +203,7 @@ function kco_wc_prefill_consent() {
 		} else {
 			$button_text = 'Meine Adressdaten vorausfüllen';
 			$link_text   = 'Es gelten die Nutzungsbedingungen zur Datenübertragung';
-			$popup_text  = 'We use Klarna Checkout as our checkout, which offers a simplified purchase experience. When you choose to go to the checkout, your email address, first name, last name, date of birth, address and phone number may be automatically transferred to Klarna AB, enabling the provision of Klarna Checkout. These User Terms apply for the use of Klarna Checkout is available here: 
+			$popup_text  = 'We use Klarna Checkout as our checkout, which offers a simplified purchase experience. When you choose to go to the checkout, your email address, first name, last name, date of birth, address and phone number may be automatically transferred to Klarna AB, enabling the provision of Klarna Checkout. These User Terms apply for the use of Klarna Checkout is available here:
 			<a target="_blank" href="https://cdn.klarna.com/1.0/shared/content/legal/terms/' . $merchant_id . '/en_us/checkout">https://cdn.klarna.com/1.0/shared/content/legal/terms/' . $merchant_id . '/en_us/checkout</a>';
 		}
 		?>
